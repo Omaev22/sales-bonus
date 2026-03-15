@@ -46,10 +46,10 @@ function calculateBonusByProfit(index, total, seller) {
  */
 function analyzeSalesData(data, options) {
     if (!data
-        || !Array.isArray(data.purchases_records)
+        || !Array.isArray(data.purchase_records)
         || !Array.isArray(data.sellers)
         || !Array.isArray(data.products)
-        || data.purchases_records.length === 0
+        || data.purchase_records.length === 0
         || data.sellers.length === 0
         || data.products.length === 0
     ) {
@@ -87,7 +87,7 @@ function analyzeSalesData(data, options) {
         return index;
     }, {});
 
-    data.purchases_records.forEach(purchase => {
+    data.purchase_records.forEach(purchase => {
         const product = productIndex[purchase.product_id];
         const seller = sellerIndex[purchase.seller_id];
 
