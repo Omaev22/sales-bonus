@@ -49,13 +49,35 @@ function calculateBonusByProfit(index, total, seller) {
  * @returns {{revenue, top_products, bonus, name, sales_count, profit, seller_id}[]}
  */
 function analyzeSalesData(data, options) {
-    if (!data
-        || !Array.isArray(data.purchase_records)
-        || !Array.isArray(data.sellers)
-        || !Array.isArray(data.products)
-    ) {
+
+    if (!data) {
         throw new Error('Некорректные входные данные');
     }
+
+    if (!Array.isArray(data.sellers)) {
+        throw new Error('Некорректные входные данные');
+    }
+
+    if (!Array.isArray(data.products)) {
+        throw new Error('Некорректные входные данные');
+    }
+
+    if (!Array.isArray(data.purchase_records)) {
+        throw new Error('Некорректные входные данные');
+    }
+
+    if (data.sellers.length === 0) {
+        throw new Error('Некорректные входные данные');
+    }
+
+    if (data.products.length === 0) {
+        throw new Error('Некорректные входные данные');
+    }
+
+    if (data.purchase_records.length === 0) {
+        throw new Error('Некорректные входные данные');
+    }
+
 
     const { calculateRevenue, calculateBonus } = options || {};
 
@@ -78,12 +100,12 @@ function analyzeSalesData(data, options) {
     });
     
 
-   const productIndex = data.products.reduce((index, product) => {
+    const productIndex = data.products.reduce((index, product) => {
         index[product.id] = product;
         return index;
     }, {});
 
-     const sellerIndex = sellerStatistics.reduce((index, seller) => {
+    const sellerIndex = sellerStatistics.reduce((index, seller) => {
         index[seller.id] = seller;
         return index;
     }, {});
