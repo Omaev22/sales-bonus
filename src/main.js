@@ -22,19 +22,15 @@ function calculateSimpleRevenue(purchase, _product) {
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
 
-    if (index === total - 1) {
-        return 0;
-    }
-
     if (index === 0) {
         return profit * 0.15; // Бонус для первого места 15%
     }
 
-    if (index === 1) {
+    if (index === 1 || index === 2) {
         return profit * 0.10; 
     }// Бонус для топ-10%
 
-    if (index === 2) {
+    if (index < total - 1) {
         return profit * 0.05; // Бонус для 3-го места
     }
 
