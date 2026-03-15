@@ -30,11 +30,15 @@ function calculateBonusByProfit(index, total, seller) {
         return profit * 0.15; // Бонус для первого места 15%
     }
 
-    if (index === 1 || index === 2) {
+    if (index === 1) {
         return profit * 0.10; 
     }// Бонус для топ-10%
 
-    return profit * 0.05; // Бонус для остальных
+    if (index === 2) {
+        return profit * 0.05; // Бонус для остальных
+    }
+
+    return 0;
     // @TODO: Расчет бонуса от позиции в рейтинге
 }
 
