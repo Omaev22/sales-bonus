@@ -22,6 +22,10 @@ function calculateSimpleRevenue(purchase, _product) {
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
 
+    if (index === total - 1) {
+        return 0;
+    }
+
     if (index === 0) {
         return profit * 0.15; // Бонус для первого места 15%
     }
@@ -30,11 +34,7 @@ function calculateBonusByProfit(index, total, seller) {
         return profit * 0.10; 
     }// Бонус для топ-10%
 
-    if (index === 3 || index || 4) {
-        return profit * 0.05; // Бонус для остальных
-    }
-
-    return 0; 
+    return profit * 0.05; // Бонус для остальных
     // @TODO: Расчет бонуса от позиции в рейтинге
 }
 
@@ -87,7 +87,7 @@ function analyzeSalesData(data, options) {
         return index;
     }, {});
 
-    data.purchases.forEach(purchase => {
+    data.purchases_records.forEach(purchase => {
         const product = productIndex[purchase.product_id];
         const seller = sellerIndex[purchase.seller_id];
 
