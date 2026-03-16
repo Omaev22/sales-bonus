@@ -6,8 +6,10 @@
  */
 function calculateSimpleRevenue(purchase, _product) {
     const { discount, sale_price, quantity } = purchase;
-    const discountAmount = 1 - (discount / 100);
-    return sale_price * quantity * discountAmount;
+    const discountAmount = 1 - discount / 100;
+    const revenue = sale_price * quantity * discountAmount;
+
+    return Math.round(revenue * 100) / 100; // Округление до 2 знаков после запятой
 
     }
    // @TODO: Расчет выручки от операции
