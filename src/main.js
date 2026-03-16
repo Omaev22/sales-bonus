@@ -150,9 +150,12 @@ function analyzeSalesData(data, options) {
     // @TODO: Подготовка итоговой коллекции с нужными полями
 }
 
+
+
+if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         analyzeSalesData,
         calculateSimpleRevenue,
         calculateBonusByProfit
     };
-
+}
