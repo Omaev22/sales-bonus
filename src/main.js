@@ -104,8 +104,8 @@ function analyzeSalesData(data, options) {
                 seller.product_sold[item.sku] = 0;
             }
             seller.product_sold[item.sku] += item.quantity;
-        }
-    })
+        });
+    });
 
     //Сортировка продавцов по прибыли
     const sortedSellers = sellerStatistics.sort((a, b) => b.profit - a.profit);
@@ -131,6 +131,12 @@ function analyzeSalesData(data, options) {
             top_products: topProducts
         };
     }); 
+
+    module.exports = {
+        analyzeSalesData,
+        calculateSimpleRevenue,
+        calculateBonusByProfit
+    };
 
 
 
