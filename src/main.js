@@ -92,7 +92,7 @@ function analyzeSalesData(data, options) {
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
             const revenue = calculateRevenue(item, product);
-            const profit = roundMoney(revenue - product.cost_price * item.quantity);
+            const profit = revenue - product.purchase_price * item.quantity;
 
             seller.revenue += revenue;
             seller.profit += profit;
