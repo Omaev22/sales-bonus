@@ -54,8 +54,9 @@ function analyzeSalesData(data, options) {
 
     if (calculateRevenue && typeof calculateRevenue !== 'function') {
         throw new Error('Опция calculateRevenue должна быть функцией');
+    }
 
-    } else if (calculateBonus && typeof calculateBonus !== 'function') {
+    if (calculateBonus && typeof calculateBonus !== 'function') {
         throw new Error('Опция calculateBonus должна быть функцией');
     }
 
@@ -93,7 +94,7 @@ function analyzeSalesData(data, options) {
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
             const revenue = calculateRevenue ? calculateRevenue(item, product) : calculateSimpleRevenue(item, product);
-            const profit = revenue - (product.cost_price * item.quantity);
+            const profit = revenue - (product.purchase_price * item.quantity);
 
             seller.sales_count += item.quantity;
             seller.revenue += revenue;
@@ -116,7 +117,7 @@ function analyzeSalesData(data, options) {
         //Определяем топ-3 продаваемых товара для каждого продавца
         const topProducts = Object.entries(seller.product_sold)
             .sort((a, b) => b[1] - a[1])
-            .slice(0, 3)
+            .slice(0, 10)
             .map(([sku, quantity]) => ({sku, quantity}));
 
         const bonus = calculateBonus ? calculateBonus(index, totalSellers, seller) : calculateBonusByProfit(index, totalSellers, seller);
