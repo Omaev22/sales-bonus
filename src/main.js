@@ -85,7 +85,7 @@ function analyzeSalesData(data, options) {
     }, {});
     
     //Быстрый доступ к данным о продавцах по их ID
-    const sellerIndex = seller.reduce((acc, seller) => {
+    const sellerIndex = sellerStatistics.reduce((acc, seller) => {
         acc[seller.id] = seller;
         return acc;
     }, {});
@@ -122,20 +122,17 @@ function analyzeSalesData(data, options) {
     //Сортировка продавцов по прибыли
     sellerStatistics.sort((a, b) => b.profit - a.profit);
 
-    sellerStatistics.forEach((seller, index) => {
-        seller.bonus = options.calculateBonus(index, sellerStatistics.length, seller);
-        sellerStatistics.forEach((seller, index) => {
-            seller.bonus = options.calculateBonus(index, sellerStatistics.length, seller);
+    return sellerStatistics.map((seller, index) => {
+        //Назначение бонусов на основе ранжирования
+        const bonus = calculateBonus(index, sellerStatistics.length, seller);
 
             //Определение топ-10 продуктов по количеству проданных единиц
-            seller.top_products = Object.entries(seller.product_sold)
+        const top_products = Object.entries(seller.product_sold)
                 .map(([sku, quantity]) => ({ sku, quantity }))
                 .sort((a, b) => b.quantity - a.quantity)
                 .slice(0, 10);
-        });
 
-
-        return sellerStatistics.map((seller) => ({
+        return {
             seller_id: seller.id,
             name: seller.name,
             sales_count: seller.sales_count,
@@ -143,7 +140,7 @@ function analyzeSalesData(data, options) {
             profit: +seller.profit.toFixed(2),
             bonus: +seller.bonus.toFixed(2),
             top_products: seller.top_products
-        }));
+        };
     }); 
 
     // @TODO: Проверка входных данных
