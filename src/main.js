@@ -52,25 +52,25 @@ function analyzeSalesData(data, options) {
 
     const { calculateRevenue, calculateBonus } = options || {};
 
-    if (calculateRevenue && typeof calculateRevenue !== 'function') {
+    if (options) { 
+        if (calculateRevenue && typeof calculateRevenue !== 'function') {
         throw new Error('Опция calculateRevenue должна быть функцией');
-    }
+        }
 
-    if (calculateBonus && typeof calculateBonus !== 'function') {
+        if (calculateBonus && typeof calculateBonus !== 'function') {
         throw new Error('Опция calculateBonus должна быть функцией');
+        }
     }
 
     //Создание промежуточной структуры для сбора статистики по каждому продавцу
-    const sellerStatistics = data.sellers.map(seller => {
-        return {
+    const sellerStatistics = data.sellers.map(seller => ({
             id: seller.id,
             name: `${seller.first_name} ${seller.last_name}`,
             sales_count: 0,
             revenue: 0,
             profit: 0,
             product_sold: {}
-        };
-    });
+    }));
     
     //Быстрый доступ к данным о товарах по их sku
     const productIndex = data.products.reduce((acc, product) => {
@@ -96,7 +96,7 @@ function analyzeSalesData(data, options) {
             const revenue = calculateRevenue ? calculateRevenue(item, product) : calculateSimpleRevenue(item, product);
             const profit = revenue - (product.purchase_price * item.quantity);
 
-            seller.sales_count += item.quantity;
+            seller.sales_count += 1;
             seller.revenue += revenue;
             seller.profit += profit;
 
@@ -133,17 +133,6 @@ function analyzeSalesData(data, options) {
         };
     }); 
 
-    module.exports = {
-        analyzeSalesData,
-        calculateSimpleRevenue,
-        calculateBonusByProfit
-    };
-
-
-
-
-
-
     // @TODO: Проверка входных данных
 
     // @TODO: Проверка наличия опций
@@ -160,3 +149,10 @@ function analyzeSalesData(data, options) {
 
     // @TODO: Подготовка итоговой коллекции с нужными полями
 }
+
+    module.exports = {
+        analyzeSalesData,
+        calculateSimpleRevenue,
+        calculateBonusByProfit
+    };
+
