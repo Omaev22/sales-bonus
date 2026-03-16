@@ -22,17 +22,13 @@ function calculateSimpleRevenue(purchase, _product) {
 function calculateBonusByProfit(index, total, seller) {
     const { profit } = seller;
 
-    if (index === 0) {
-        return profit * 0.15; // Бонус для первого места 15%
-    }
+    if (index === 0) return profit * 0.15; // Бонус для первого места 15%
 
-    if (index === 1 || index === 2) {
-        return profit * 0.10; 
-    }// Бонус для топ-10%
 
-    if (index < total - 1) {
-        return profit * 0.05; // Бонус для 3-го места
-    }
+    if (index === 1 || index === 2) return profit * 0.10; 
+    // Бонус для топ-10%
+
+    if (index === 3) return profit * 0.05; // Бонус для 3-го места
 
     return 0; // Бонус для остальных продавцов
     // @TODO: Расчет бонуса от позиции в рейтинге
@@ -46,34 +42,13 @@ function calculateBonusByProfit(index, total, seller) {
  */
 function analyzeSalesData(data, options) {
     //Проверка входных данных
-    if (!data) {
+    if (!data || !Array.isArray(data.sellers) || !Array.isArray(data.products) || !Array.isArray(data.purchase_records)) {
         throw new Error('Некорректные входные данные');
     }
 
-    if (!Array.isArray(data.sellers)) {
-        throw new Error('Некорректные входные данные');
+    if (data.sellers.length === 0 || data.products.length === 0 || data.purchase_records.length === 0) {
+        throw new Error('Входные данные не должны быть пустыми');
     }
-
-    if (!Array.isArray(data.products)) {
-        throw new Error('Некорректные входные данные');
-    }
-
-    if (!Array.isArray(data.purchase)) {
-        throw new Error('Некорректные входные данные');
-    }
-
-    if (data.sellers.length === 0) {
-        throw new Error('Некорректные входные данные');
-    }
-
-    if (data.products.length === 0) {
-        throw new Error('Некорректные входные данные');
-    }
-
-    if (data.purchase.length === 0) {
-        throw new Error('Некорректные входные данные');
-    }
-
 
     const { calculateRevenue, calculateBonus } = options || {};
 
@@ -109,7 +84,7 @@ function analyzeSalesData(data, options) {
     }, {});
 
     //Обработка каждой покупки для накопления статистики по каждому продавцу
-    data.purchase.forEach(purchase => {
+    data.purchase_records.forEach(purchase => {
         const product = productIndex[purchase.product_id];
         const seller = sellerIndex[purchase.seller_id];
 
