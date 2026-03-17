@@ -87,11 +87,15 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
-            const revenue = parseFloat(calculateRevenue(item, product).toFixed(2));
-            const profit = parseFloat((revenue - (product.purchase_price || 0) * item.quantity).toFixed(2));
+            const rawRevenue = calculateRevenue(item, product);
+            const revenue = parseFloat(rawRevenue.toFixed(2));
 
-            seller.revenue += revenue;
-            seller.profit += profit;
+            const cost = (product.purchase_price || 0) * item.quantity;
+            const rawProfit = rawRevenue - cost;
+            const profit = parseFloat(rawProfit.toFixed(2));
+
+            seller.revenue = parseFloat((seller.revenue + revenue).toFixed(2));
+            seller.profit = parseFloat((seller.profit + profit).toFixed(2));
 
             // Учет количества проданных единиц каждого товара для определения топ-продуктов
             seller.product_sold[item.sku] = (seller.product_sold[item.sku] || 0) + item.quantity;
