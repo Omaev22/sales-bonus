@@ -31,7 +31,7 @@ function calculateBonusByProfit(index, total, seller) {
     else if (index === 1 || index === 2) bonus = profit *0.10; // 10% от прибыли для второго и третьего места
     else if (index === 3) bonus = profit *0.05; // 5% от прибыли для четвертого места
 
-    return roundMoney(bonus);
+    return bonus;
 
     // Бонус для остальных продавцов
     // @TODO: Расчет бонуса от позиции в рейтинге
@@ -60,7 +60,7 @@ function analyzeSalesData(data, options) {
     const { calculateRevenue, calculateBonus } = options;
 
     //Создание промежуточной структуры для сбора статистики по каждому продавцу
-    const sellerStatis = data.sellers.map(seller => ({
+    const sellerStats = data.sellers.map(seller => ({
             id: seller.id,
             name: `${seller.first_name} ${seller.last_name}`,
             sales_count: 0,
@@ -75,7 +75,7 @@ function analyzeSalesData(data, options) {
     }, {});
     
     //Быстрый доступ к данным о продавцах по их ID
-    const sellerIndex = sellerStatis.reduce((acc, seller) => { acc[seller.id] = seller;
+    const sellerIndex = sellerStats.reduce((acc, seller) => { acc[seller.id] = seller;
         return acc;
     }, {});
 
@@ -106,11 +106,11 @@ function analyzeSalesData(data, options) {
     });
 
     //Сортировка продавцов по прибыли
-    sellerStatis.sort((a, b) => b.profit - a.profit);
+    sellerStats.sort((a, b) => b.profit - a.profit);
 
-    return sellerStatis.map((seller, index) => {
+    return sellerStats.map((seller, index) => {
         //Назначение бонусов на основе ранжирования
-        const bonus = calculateBonus(index, sellerStatis.length, seller);
+        const bonus = calculateBonus(index, sellerStats.length, seller);
 
             //Определение топ-10 продуктов по количеству проданных единиц
         const top_products = Object.entries(seller.product_sold)
