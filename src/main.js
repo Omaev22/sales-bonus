@@ -6,7 +6,7 @@
  */
 
 function roundMoney(value) {
-    return Math.round(value * 100) / 100;
+    return Number(value.toFixed(2));
 }
 
 function calculateSimpleRevenue(purchase, _product) {
@@ -91,7 +91,7 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
-            const revenue = calculateRevenue(item, product);
+            const revenue = roundMoney(calculateRevenue(item, product));
             const profit = roundMoney(revenue - (product.purchase_price || 0) * item.quantity);
 
             seller.revenue += revenue;
