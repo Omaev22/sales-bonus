@@ -87,8 +87,8 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
-            const revenue = calculateRevenue(item, product);
-            const profit = revenue - (product.purchase_price || 0) * item.quantity;
+            const revenue = +calculateRevenue(item, product).toFixed(2);
+            const profit = +(revenue - (product.purchase_price || 0) * item.quantity).toFixed(2);
 
             seller.revenue += revenue;
             seller.profit += profit;
