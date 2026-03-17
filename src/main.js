@@ -31,7 +31,7 @@ function calculateBonusByProfit(index, total, seller) {
     else if (index === 1 || index === 2) bonus = profit *0.10; // 10% от прибыли для второго и третьего места
     else if (index === 3) bonus = profit *0.05; // 5% от прибыли для четвертого места
 
-    return bonus;
+    return roundMoney(bonus);
 
     // Бонус для остальных продавцов
     // @TODO: Расчет бонуса от позиции в рейтинге
@@ -92,7 +92,7 @@ function analyzeSalesData(data, options) {
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
             const revenue = calculateRevenue(item, product);
-            const profit = revenue - product.purchase_price * item.quantity;
+            const profit = roundMoney(revenue - product.cost_price * item.quantity);
 
             seller.revenue += revenue;
             seller.profit += profit;
@@ -124,7 +124,7 @@ function analyzeSalesData(data, options) {
             sales_count: seller.sales_count,
             revenue: roundMoney(seller.revenue),
             profit: roundMoney(seller.profit),
-            bonus: roundMoney(bonus),
+            bonus: bonus,
             top_products: top_products
         };
     }); 
