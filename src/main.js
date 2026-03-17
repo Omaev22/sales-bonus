@@ -5,14 +5,10 @@
  * @returns {number}
  */
 
-function roundMoney(value) {
-    return Number(value.toFixed(2));
-}
-
 function calculateSimpleRevenue(purchase, _product) {
     const { discount = 0, sale_price, quantity } = purchase;
-    const revenue = sale_price * quantity * (1 - discount / 100);
-    return roundMoney(revenue);
+    return sale_price * quantity * (1 - discount / 100);
+    
 }
    // @TODO: Расчет выручки от операции
 
@@ -31,7 +27,7 @@ function calculateBonusByProfit(index, total, seller) {
     else if (index === 1 || index === 2) bonus = profit * 0.10; // 10% от прибыли для второго и третьего места
     else if (index === 3) bonus = profit * 0.05; // 5% от прибыли для четвертого места
 
-    return roundMoney(bonus);
+    return bonus;
 
     // Бонус для остальных продавцов
     // @TODO: Расчет бонуса от позиции в рейтинге
@@ -91,8 +87,8 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
-            const revenue = roundMoney(calculateRevenue(item, product));
-            const profit = roundMoney(revenue - (product.purchase_price || 0) * item.quantity);
+            const revenue = calculateRevenue(item, product);
+            const profit = revenue - (product.purchase_price || 0) * item.quantity;
 
             seller.revenue += revenue;
             seller.profit += profit;
@@ -122,9 +118,9 @@ function analyzeSalesData(data, options) {
             seller_id: seller.id,
             name: seller.name,
             sales_count: seller.sales_count,
-            revenue: roundMoney(seller.revenue),
-            profit: roundMoney(seller.profit),
-            bonus: bonus,
+            revenue: +seller.revenue.toFixed(2),
+            profit: +seller.profit.toFixed(2),
+            bonus: +bonus.toFixed(2),
             top_products: top_products
         };
     }); 
