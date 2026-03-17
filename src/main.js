@@ -27,9 +27,9 @@ function calculateBonusByProfit(index, total, seller) {
     const profit = seller.profit || 0;
 
     let bonus = 0;
-    if (index === 0) bonus = profit *0.15; // 15% от прибыли для первого места
-    else if (index === 1 || index === 2) bonus = profit *0.10; // 10% от прибыли для второго и третьего места
-    else if (index === 3) bonus = profit *0.05; // 5% от прибыли для четвертого места
+    if (index === 0) bonus = profit * 0.15; // 15% от прибыли для первого места
+    else if (index === 1 || index === 2) bonus = profit * 0.10; // 10% от прибыли для второго и третьего места
+    else if (index === 3) bonus = profit * 0.05; // 5% от прибыли для четвертого места
 
     return roundMoney(bonus);
 
@@ -92,7 +92,7 @@ function analyzeSalesData(data, options) {
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
             const revenue = calculateRevenue(item, product);
-            const profit = roundMoney(revenue - product.cost_price * item.quantity);
+            const profit = roundMoney(revenue - (product.purchase_price || 0) * item.quantity);
 
             seller.revenue += revenue;
             seller.profit += profit;
