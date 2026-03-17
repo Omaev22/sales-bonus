@@ -87,8 +87,8 @@ function analyzeSalesData(data, options) {
             const product = productIndex[item.sku];
             if (!product) return; // Игнорируем записи с несуществующими товарами
 
-            const revenue = +calculateRevenue(item, product).toFixed(2);
-            const profit = +(revenue - (product.purchase_price || 0) * item.quantity).toFixed(2);
+            const revenue = parseFloat(calculateRevenue(item, product).toFixed(2));
+            const profit = parseFloat((revenue - (product.purchase_price || 0) * item.quantity).toFixed(2));
 
             seller.revenue += revenue;
             seller.profit += profit;
@@ -118,9 +118,9 @@ function analyzeSalesData(data, options) {
             seller_id: seller.id,
             name: seller.name,
             sales_count: seller.sales_count,
-            revenue: +seller.revenue.toFixed(2),
-            profit: +seller.profit.toFixed(2),
-            bonus: +bonus.toFixed(2),
+            revenue: parseFloat(seller.revenue.toFixed(2)),
+            profit: parseFloat(seller.profit.toFixed(2)),
+            bonus: parseFloat(bonus.toFixed(2)),
             top_products: top_products
         };
     }); 
