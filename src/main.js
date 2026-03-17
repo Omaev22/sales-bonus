@@ -66,36 +66,38 @@ function analyzeSalesData(data, options) {
     }));
     
     //Быстрый доступ к данным о товарах по их sku
-    const productIndex = Object.fromEntries(data.products.map(product => [product.sku, product]));
+    const productIndex = Object.fromEntries(
+        data.products.map(product => [product.sku, product])
+    );
     
     //Быстрый доступ к данным о продавцах по их ID
-    const sellerIndex = Object.fromEntries(sellerStats.map((item) => [item.id, item]));
+    const sellerIndex = Object.fromEntries(
+        sellerStats.map((item) => [item.id, item])
+    );
 
     //Обработка каждой покупки для накопления статистики по каждому продавцу
 
     data.purchase_records.forEach((record) => {
         const seller = sellerIndex[record.seller_id];
-        seller.sales_count += 1; // Игнорируем записи с несуществующими продавцами
+        seller.sales_count += 1;
 
         record.items.forEach((item) => {
             const product = productIndex[item.sku];
-            if (!product) return; // Игнорируем записи с несуществующими товарами
-
-            const revenue = calculateRevenue(item, product);     
-            const profit = revenue - product.cost_price * item.quantity; // Прибыль = выручка - себестоимость
+            const cost = product.purchase_price * item.quantity;
+            const revenue = options.calculateRevenue(item, product);
+            const profit = revenue - cost;
 
             seller.revenue += revenue;
             seller.profit += profit;
 
-            if (!seller.product_sold[item.sku]) seller.product_sold[item.sku] = 0;
-            
+            //Учет количества проданных единиц для каждого товара
+            if (!seller.product_sold[item.sku]) {
+                seller.product_sold[item.sku] = 0;
+            }
             seller.product_sold[item.sku] += item.quantity;
-            // Учет количества проданных единиц каждого товара для определения топ-продуктов
-            
-
-            // Увеличиваем количество проданных единиц для данного товара
-        
         });
+
+        
     });
 
     //Сортировка продавцов по прибыли
