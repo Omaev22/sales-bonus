@@ -64,15 +64,16 @@ function analyzeSalesData(data, options) {
             profit: 0,
             product_sold: {}
     }));
-    
-    //Быстрый доступ к данным о товарах по их sku
-    const productIndex = Object.fromEntries(
-        data.products.map(product => [product.sku, product])
-    );
-    
+
     //Быстрый доступ к данным о продавцах по их ID
     const sellerIndex = Object.fromEntries(
         sellerStats.map((item) => [item.id, item])
+    );
+
+    
+    //Быстрый доступ к данным о товарах по их sku
+    const productIndex = Object.fromEntries(
+        data.products.map(item => [item.sku, item])
     );
 
     //Обработка каждой покупки для накопления статистики по каждому продавцу
@@ -80,22 +81,21 @@ function analyzeSalesData(data, options) {
     data.purchase_records.forEach((record) => {
         const seller = sellerIndex[record.seller_id];
         seller.sales_count += 1;
+        seller.revenue += record.total_amount;  //Суммирование выручки от каждой покупки    
 
         record.items.forEach((item) => {
-            const product = productIndex[item.sku];
-            const cost = product.purchase_price * item.quantity;
-            const revenue = options.calculateRevenue(item, product);
-            const profit = revenue - cost;
-
-            seller.revenue += revenue;
-            seller.profit += profit;
+            const product = productIndex[item.sku];  //Получение данных о товаре по его SKU
+            const cost = product.purchase_price * item.quantity;  //Расчет выручки с помощью функции из опций
+            const revenue = calculateRevenue(item, product); //Расчет прибыли от продажи товара
+            const profit = revenue - cost;  //Расчет прибыли от продажи товара
+            seller.profit += profit;  //Суммирование прибыли от каждой покупки
 
             //Учет количества проданных единиц для каждого товара
             if (!seller.product_sold[item.sku]) {
                 seller.product_sold[item.sku] = 0;
             }
-            seller.product_sold[item.sku] += item.quantity;
-        });
+            seller.product_sold[item.sku] += item.quantity; //Суммирование количества проданных единиц для каждого товара
+        }); 
 
         
     });
