@@ -87,9 +87,8 @@ function analyzeSalesData(data, options) {
             seller.revenue += revenue;
             seller.profit += profit;
 
-            if (!seller.product_sold[item.sku]) {
-                seller.product_sold[item.sku] = 0;
-            }
+            if (!seller.product_sold[item.sku]) seller.product_sold[item.sku] = 0;
+            
             seller.product_sold[item.sku] += item.quantity;
             // Учет количества проданных единиц каждого товара для определения топ-продуктов
             
